@@ -1,5 +1,6 @@
 import Foundation
 import PhotosUI
+import SwiftUI
 
 struct PhotoDraft: Identifiable {
     let id = UUID()
@@ -120,4 +121,3 @@ final class InspectionAnalysisViewModel: ObservableObject {
         inspection.severity = result.severity.rawValue
     }
 }
-
