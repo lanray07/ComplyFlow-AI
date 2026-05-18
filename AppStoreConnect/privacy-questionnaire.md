@@ -53,6 +53,5 @@ Sensitive safety/compliance caution:
 
 ## Required URL Fields
 
-- Privacy Policy URL: `https://YOUR_DOMAIN.com/privacy`
+- Privacy Policy URL: public URL still required before final submission, for example `https://YOUR_DOMAIN.com/privacy`
 - User Privacy Choices URL: optional unless you add account deletion/data export flows or backend data processing.
-

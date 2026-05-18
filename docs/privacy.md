@@ -32,5 +32,4 @@ ComplyFlow AI provides operational drafting and organization support only. It is
 
 ## Contact
 
-Contact: `YOUR SUPPORT EMAIL`
-
+Contact: boboyen@email.com
