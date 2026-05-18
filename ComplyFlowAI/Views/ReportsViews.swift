@@ -57,7 +57,7 @@ struct ReportsCenterView: View {
     }
 
     @ViewBuilder
-    private func reportSection<Data: RandomAccessCollection, Row: View>(_ title: String, items: Data, @ViewBuilder row: (Data.Element) -> Row) -> some View where Data.Element: Identifiable {
+    private func reportSection<Data: RandomAccessCollection, Row: View>(_ title: String, items: Data, @ViewBuilder row: @escaping (Data.Element) -> Row) -> some View where Data.Element: Identifiable {
         if !items.isEmpty {
             Section(title) {
                 ForEach(items) { item in
@@ -153,4 +153,3 @@ struct ReportPreviewView: View {
         }
     }
 }
-
