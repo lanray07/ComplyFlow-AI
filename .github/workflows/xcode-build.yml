@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Build ComplyFlowAI
-        runs-on: macos-26
+    runs-on: macos-26
 
     steps:
       - name: Checkout
