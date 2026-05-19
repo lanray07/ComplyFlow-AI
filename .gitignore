@@ -16,4 +16,10 @@ Package.resolved
 # App secrets and local configs
 *.env
 *.xcconfig.local
-
+SigningAssets/
+*.p12
+*.mobileprovision
+*.cer
+*.csr
+*.key
+*.p8
