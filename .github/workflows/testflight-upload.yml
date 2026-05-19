@@ -16,12 +16,6 @@ jobs:
       PROJECT: ComplyFlowAI.xcodeproj
       SCHEME: ComplyFlowAI
       BUNDLE_ID: com.complyflowai.app
-      ARCHIVE_PATH: ${{ runner.temp }}/ComplyFlowAI.xcarchive
-      EXPORT_PATH: ${{ runner.temp }}/export
-      CERTIFICATE_PATH: ${{ runner.temp }}/ios_distribution.p12
-      PROVISIONING_PROFILE_PATH: ${{ runner.temp }}/app_store.mobileprovision
-      KEYCHAIN_PATH: ${{ runner.temp }}/app-signing.keychain-db
-      API_KEY_PATH: ${{ runner.temp }}/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8
 
     steps:
       - name: Checkout
@@ -29,6 +23,17 @@ jobs:
 
       - name: Show Xcode version
         run: xcodebuild -version
+
+      - name: Prepare build paths
+        run: |
+          {
+            echo "ARCHIVE_PATH=$RUNNER_TEMP/ComplyFlowAI.xcarchive"
+            echo "EXPORT_PATH=$RUNNER_TEMP/export"
+            echo "CERTIFICATE_PATH=$RUNNER_TEMP/ios_distribution.p12"
+            echo "PROVISIONING_PROFILE_PATH=$RUNNER_TEMP/app_store.mobileprovision"
+            echo "KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db"
+            echo "PROFILE_PLIST_PATH=$RUNNER_TEMP/profile.plist"
+          } >> "$GITHUB_ENV"
 
       - name: Install signing assets
         env:
@@ -56,9 +61,9 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "$TEMP_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          security cms -D -i "$PROVISIONING_PROFILE_PATH" > "$RUNNER_TEMP/profile.plist"
-          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$RUNNER_TEMP/profile.plist")
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$RUNNER_TEMP/profile.plist")
+          security cms -D -i "$PROVISIONING_PROFILE_PATH" > "$PROFILE_PLIST_PATH"
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_PLIST_PATH")
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_PLIST_PATH")
           cp "$PROVISIONING_PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
 
           {
@@ -90,7 +95,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          EXPORT_OPTIONS_PATH="$RUNNER_TEMP/ExportOptions.plist"
+
+          cat > "$EXPORT_OPTIONS_PATH" <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -116,7 +123,7 @@ jobs:
 
           xcodebuild -exportArchive \
             -archivePath "$ARCHIVE_PATH" \
-            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportOptionsPlist "$EXPORT_OPTIONS_PATH" \
             -exportPath "$EXPORT_PATH"
 
           IPA_PATH=$(find "$EXPORT_PATH" -name '*.ipa' -print -quit)
@@ -134,6 +141,7 @@ jobs:
         run: |
           set -euo pipefail
 
+          API_KEY_PATH="$RUNNER_TEMP/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
           printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$API_KEY_PATH"
           API_PRIVATE_KEYS_DIR="$RUNNER_TEMP" xcrun altool --upload-app \
             --type ios \
@@ -145,7 +153,7 @@ jobs:
         if: always()
         run: |
           security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
-          rm -f "$CERTIFICATE_PATH" "$PROVISIONING_PROFILE_PATH" "$API_KEY_PATH"
+          rm -f "$CERTIFICATE_PATH" "$PROVISIONING_PROFILE_PATH" "$PROFILE_PLIST_PATH" "$RUNNER_TEMP"/AuthKey_*.p8
           if [ -n "${PROFILE_UUID:-}" ]; then
             rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
           fi
