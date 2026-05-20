@@ -2,7 +2,7 @@
 
 Effective date: May 18, 2026
 
-These draft terms must be reviewed and customized for your legal entity, jurisdiction, subscription terms, cancellation language, and support contact before public release.
+These Terms of Use apply to ComplyFlow AI.
 
 ## Service
 
@@ -14,7 +14,7 @@ ComplyFlow AI provides operational drafting and organization support only. It do
 
 ## Subscriptions
 
-Paid digital features are offered through Apple In-App Purchase using StoreKit. Subscription options may include Pro Monthly, Pro Yearly, and Business Monthly plans. Payment is charged to your Apple Account at confirmation of purchase. Subscriptions automatically renew unless canceled according to Apple’s App Store subscription settings.
+Paid digital features are offered through Apple In-App Purchase using StoreKit. Subscription options may include Pro Monthly, Pro Yearly, and Business Monthly plans. Payment is charged to your Apple Account at confirmation of purchase. Subscriptions automatically renew unless canceled according to Apple's App Store subscription settings.
 
 You can manage or cancel subscriptions in your Apple Account settings.
 
@@ -28,5 +28,4 @@ The app is provided without guarantees that it will satisfy any specific legal, 
 
 ## Contact
 
-Contact: `YOUR SUPPORT EMAIL`
-
+Contact: `boboyen@email.com`

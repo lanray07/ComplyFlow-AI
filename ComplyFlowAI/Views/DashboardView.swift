@@ -73,6 +73,7 @@ struct DashboardView: View {
                 QuickActionLink(title: "Report Incident", systemImage: "cross.case", route: .newIncident)
                 QuickActionLink(title: "Create Checklist", systemImage: "list.bullet.clipboard", route: .newInspection)
                 QuickActionLink(title: "Corrective Plan", systemImage: "wrench.and.screwdriver", route: .correctiveAction)
+                QuickActionLink(title: "View Plans", systemImage: "creditcard", route: .paywall)
             }
         }
     }
@@ -90,6 +91,9 @@ struct DashboardView: View {
                             .foregroundStyle(.primary)
                         Text(subscriptions.subscriptionStatusText)
                             .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text("Tap to view Pro, Pro Yearly, and Business subscriptions.")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
@@ -203,4 +207,3 @@ private struct QuickActionLink: View {
         .buttonStyle(.plain)
     }
 }
-

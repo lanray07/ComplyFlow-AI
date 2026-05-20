@@ -13,11 +13,14 @@ struct PaywallView: View {
                     Text("Subscriptions are handled with Apple StoreKit 2 and In-App Purchase.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    Text("Choose from monthly Pro, yearly Pro, or monthly Business access. Subscriptions renew automatically until cancelled in your Apple Account settings.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
 
                 PlanCard(
                     name: "Free",
-                    price: "£0",
+                    price: "$0",
                     summary: "For trying core workflows",
                     features: ["3 inspections/month", "1 SOP/month", "Basic reports", "ComplyFlow AI branding"],
                     productID: nil
@@ -25,7 +28,7 @@ struct PaywallView: View {
 
                 PlanCard(
                     name: "Pro Monthly",
-                    price: "£24.99",
+                    price: "$24.99 / month",
                     summary: "For active operators",
                     features: ["Unlimited inspections", "Unlimited SOP generation", "Audit scoring", "AI corrective action plans", "PDF exports", "Compliance reminders"],
                     productID: .proMonthly
@@ -33,7 +36,7 @@ struct PaywallView: View {
 
                 PlanCard(
                     name: "Pro Yearly",
-                    price: "£199.99",
+                    price: "$199.99 / year",
                     summary: "Best value for year-round compliance",
                     features: ["All Pro features", "Advanced reports", "Recurring compliance workflows", "Unlimited exports"],
                     productID: .proYearly
@@ -41,7 +44,7 @@ struct PaywallView: View {
 
                 PlanCard(
                     name: "Business Monthly",
-                    price: "£99.99",
+                    price: "$99.99 / month",
                     summary: "For multi-site and team workflows",
                     features: ["Multi-site support", "Team management placeholder", "White-label branding", "Advanced audit tools", "Unlimited exports"],
                     productID: .businessMonthly
@@ -61,6 +64,10 @@ struct PaywallView: View {
                     Link("Privacy Policy", destination: ComplianceConstants.privacyPolicyURL)
                 }
                 .font(.footnote)
+
+                Text("Subscription titles, durations, and localized prices are shown above. Payment is charged to your Apple Account at confirmation of purchase.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
 
                 if subscriptions.isLoading {
                     ProgressView("Loading StoreKit products")
@@ -95,6 +102,17 @@ private struct PlanCard: View {
         productID.flatMap { subscriptions.product(for: $0) }
     }
 
+    private var durationText: String {
+        switch productID {
+        case .some(.proMonthly), .some(.businessMonthly):
+            "Renews monthly"
+        case .some(.proYearly):
+            "Renews yearly"
+        case .none:
+            "No subscription"
+        }
+    }
+
     var body: some View {
         CardSurface {
             VStack(alignment: .leading, spacing: 12) {
@@ -107,8 +125,15 @@ private struct PlanCard: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Text(product?.displayPrice ?? price)
-                        .font(.headline)
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(product?.displayPrice ?? price)
+                            .font(.headline)
+                        if productID != nil {
+                            Text(durationText)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
 
                 ForEach(features, id: \.self) { feature in
@@ -127,7 +152,7 @@ private struct PlanCard: View {
                     .buttonStyle(.borderedProminent)
                     .disabled(subscriptions.purchasedProductIDs.contains(product.id))
                 } else if productID != nil {
-                    Text("Configure product ID in App Store Connect or StoreKit testing.")
+                    Text("Subscriptions load from the App Store sandbox. If products are still loading, try Restore Purchases or reopen Plans.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

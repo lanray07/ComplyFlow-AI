@@ -162,10 +162,9 @@ def status_bar(c):
 
 
 def phone_shell(c, title, subtitle, badge=None):
-    status_bar(c)
-    c.text((c.s(64), c.s(126)), "ComplyFlow AI", 36, weight="bold")
-    c.pill((c.w - c.s(282), c.s(120), c.w - c.s(64), c.s(170)), "Mock AI On", COLORS["blue2"], COLORS["blue"], 22)
-    y = c.s(218)
+    c.text((c.s(64), c.s(76)), "ComplyFlow AI", 36, weight="bold")
+    c.pill((c.w - c.s(282), c.s(70), c.w - c.s(64), c.s(120)), "Mock AI On", COLORS["blue2"], COLORS["blue"], 22)
+    y = c.s(168)
     if badge:
         c.pill((c.s(64), y, c.s(64 + 240), y + c.s(46)), badge, COLORS["surface"], COLORS["blue"], 20)
         y += c.s(78)
@@ -455,9 +454,9 @@ def draw_profile_phone(c):
 def draw_paywall_phone(c):
     y, bottom = phone_shell(c, "Unlock Pro compliance tools", "StoreKit 2 subscriptions unlock unlimited inspections, SOPs, audit scoring, PDF exports and reminders.", "Paywall")
     plans = [
-        ("Pro Monthly", "GBP 24.99 / month", COLORS["blue"], True),
-        ("Pro Yearly", "GBP 199.99 / year", COLORS["green"], False),
-        ("Business Monthly", "GBP 99.99 / month", COLORS["purple"], False),
+        ("Pro Monthly", "$24.99 / month", COLORS["blue"], True),
+        ("Pro Yearly", "$199.99 / year", COLORS["green"], False),
+        ("Business Monthly", "$99.99 / month", COLORS["purple"], False),
     ]
     for name, price, color, selected in plans:
         card(c, c.s(64), y, c.w - c.s(128), c.s(190), COLORS["surface2"] if selected else COLORS["surface"], color if selected else COLORS["line"], 28)
@@ -495,10 +494,9 @@ PHONE_DRAWERS = [
 
 
 def ipad_shell(c, selected):
-    status_bar(c)
-    c.text((c.s(64), c.s(126)), "ComplyFlow AI", 38, weight="bold")
-    c.pill((c.w - c.s(320), c.s(120), c.w - c.s(64), c.s(170)), "Mock AI On", COLORS["blue2"], COLORS["blue"], 22)
-    sidebar_x, sidebar_y = c.s(64), c.s(220)
+    c.text((c.s(64), c.s(76)), "ComplyFlow AI", 38, weight="bold")
+    c.pill((c.w - c.s(320), c.s(70), c.w - c.s(64), c.s(120)), "Mock AI On", COLORS["blue2"], COLORS["blue"], 22)
+    sidebar_x, sidebar_y = c.s(64), c.s(170)
     sidebar_w, sidebar_h = c.s(360), c.h - c.s(320)
     card(c, sidebar_x, sidebar_y, sidebar_w, sidebar_h, COLORS["surface"])
     nav = ["Dashboard", "Inspection", "AI Analysis", "SOP", "Incidents", "Audits", "Reminders", "Reports", "Profile", "Plans"]
@@ -510,7 +508,7 @@ def ipad_shell(c, selected):
         c.rect((sidebar_x + c.s(24), yy, sidebar_x + sidebar_w - c.s(24), yy + c.s(66)), 20, fill)
         c.text((sidebar_x + c.s(50), yy + c.s(17)), item, 24, color, "semibold" if active else "regular")
         yy += c.s(82)
-    return c.s(470), c.s(220), c.w - c.s(534), c.h - c.s(320)
+    return c.s(470), c.s(170), c.w - c.s(534), c.h - c.s(270)
 
 
 def ipad_header(c, x, y, title, subtitle):
@@ -700,7 +698,7 @@ def draw_profile_ipad(c):
 def draw_paywall_ipad(c):
     x, y, w, h = ipad_shell(c, "Plans")
     y = ipad_header(c, x, y, "StoreKit 2 subscriptions", "Unlock unlimited inspections, SOP generation, audit scoring, PDF exports, reminders and advanced reports.")
-    plans = [("Business Monthly", "GBP 99.99 / month", COLORS["purple"], "Level 1"), ("Pro Monthly", "GBP 24.99 / month", COLORS["blue"], "Level 2"), ("Pro Yearly", "GBP 199.99 / year", COLORS["green"], "Level 2")]
+    plans = [("Business Monthly", "$99.99 / month", COLORS["purple"], "Level 1"), ("Pro Monthly", "$24.99 / month", COLORS["blue"], "Level 2"), ("Pro Yearly", "$199.99 / year", COLORS["green"], "Level 2")]
     col = (w - c.s(56)) // 3
     for idx, (name, price, color, level) in enumerate(plans):
         px = x + idx * (col + c.s(28))

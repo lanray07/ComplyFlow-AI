@@ -15,6 +15,6 @@ enum ComplianceConstants {
 
     static let disclaimerText = "ComplyFlow AI provides operational drafting and organization support only. It is not legal advice, regulatory certification, safety certification, or a replacement for licensed compliance, legal, safety, or trade professionals. AI suggestions must be reviewed before use. Users remain responsible for operational compliance."
 
-    static let termsOfUseURL = URL(string: "https://example.com/complyflow-ai/terms")!
-    static let privacyPolicyURL = URL(string: "https://example.com/complyflow-ai/privacy")!
+    static let termsOfUseURL = URL(string: "https://github.com/lanray07/ComplyFlow-AI/blob/main/docs/terms.md")!
+    static let privacyPolicyURL = URL(string: "https://github.com/lanray07/ComplyFlow-AI/blob/main/docs/privacy.md")!
 }

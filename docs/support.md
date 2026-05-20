@@ -2,13 +2,12 @@
 
 For support, contact:
 
-`YOUR SUPPORT EMAIL`
+`boboyen@email.com`
 
-Include:
+Please include:
 
 - Device model
 - iOS version
 - App version
 - A description of the issue
 - Screenshots if helpful
-
