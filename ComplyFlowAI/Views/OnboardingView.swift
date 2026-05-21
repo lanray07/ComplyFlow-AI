@@ -37,6 +37,7 @@ struct OnboardingView: View {
                         }
                     }
 
+                    AIPrivacyNoticeView()
                     ComplianceDisclaimerView()
 
                     Toggle("I understand these safety and compliance disclaimers.", isOn: $viewModel.acceptedDisclaimer)
@@ -66,4 +67,3 @@ struct OnboardingView: View {
         hasCompletedOnboarding = true
     }
 }
-

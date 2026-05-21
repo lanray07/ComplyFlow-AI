@@ -59,15 +59,12 @@ protocol AIService {
 }
 
 enum AIServiceError: LocalizedError {
-    case invalidEndpoint
-    case invalidResponse
+    case unavailable
 
     var errorDescription: String? {
         switch self {
-        case .invalidEndpoint:
-            "Remote AI endpoint is not configured."
-        case .invalidResponse:
-            "The AI service returned an unexpected response."
+        case .unavailable:
+            "AI service is unavailable."
         }
     }
 }
@@ -204,152 +201,6 @@ struct MockAIService: AIService {
             ]
         )
     }
-}
-
-struct RemoteAIService: AIService {
-    private let endpoint: URL?
-    private let session: URLSession
-
-    init(endpoint: URL? = URL(string: "https://YOUR_BACKEND_URL.com/complyflow-ai"), session: URLSession = .shared) {
-        self.endpoint = endpoint
-        self.session = session
-    }
-
-    func generateSOP(_ request: SOPRequest) async throws -> SOPOutput {
-        let response = try await post(
-            module: "sop",
-            industry: request.businessType,
-            inspectionType: "",
-            notes: "\(request.task)\n\(request.safetyRequirements)\n\(request.equipmentUsed)",
-            severity: Severity.low.rawValue,
-            images: []
-        )
-        return SOPOutput(
-            title: "\(request.task) SOP",
-            content: response.summary,
-            safetyWarnings: ["Review by a qualified person before use."],
-            ppeRequirements: response.recommendations,
-            checklist: response.correctiveActions,
-            emergencySteps: ["Stop work and escalate if conditions are unsafe."],
-            supervisorNotes: "Remote AI output must be reviewed before it is issued."
-        )
-    }
-
-    func analyzeInspection(_ inspection: Inspection, photos: [InspectionPhoto]) async throws -> InspectionAnalysis {
-        let response = try await post(
-            module: "inspection",
-            industry: "",
-            inspectionType: inspection.type,
-            notes: inspection.notes,
-            severity: inspection.severity,
-            images: photos.compactMap { $0.imageData?.base64EncodedString() }
-        )
-        return InspectionAnalysis(
-            summary: response.summary,
-            riskAreas: response.recommendations,
-            correctiveActions: response.correctiveActions,
-            complianceReminders: response.recommendations,
-            recommendedFollowUp: response.correctiveActions.first ?? "Review and schedule follow-up.",
-            severity: Severity(rawValue: response.riskLevel) ?? .medium,
-            severityScore: 70
-        )
-    }
-
-    func generateAuditSummary(auditType: AuditKind, notes: String, businessProfile: BusinessProfile?) async throws -> AuditSummary {
-        let response = try await post(
-            module: "audit",
-            industry: businessProfile?.industry ?? "",
-            inspectionType: auditType.rawValue,
-            notes: notes,
-            severity: Severity.medium.rawValue,
-            images: []
-        )
-        return AuditSummary(
-            score: 70,
-            findings: [response.summary],
-            missingItems: response.recommendations,
-            highRiskGaps: response.riskLevel == Severity.high.rawValue ? response.recommendations : [],
-            recommendations: response.recommendations,
-            correctiveActionRoadmap: response.correctiveActions
-        )
-    }
-
-    func generateCorrectiveActionPlan(context: String, severity: Severity) async throws -> CorrectiveActionPlan {
-        let response = try await post(
-            module: "corrective_action",
-            industry: "",
-            inspectionType: "",
-            notes: context,
-            severity: severity.rawValue,
-            images: []
-        )
-        return CorrectiveActionPlan(
-            summary: response.summary,
-            actions: response.correctiveActions,
-            followUpChecklist: response.recommendations,
-            targetSeverity: Severity(rawValue: response.riskLevel) ?? severity
-        )
-    }
-
-    func generateIncidentSummary(_ incident: IncidentReport) async throws -> IncidentSummary {
-        let response = try await post(
-            module: "incident",
-            industry: "",
-            inspectionType: incident.type,
-            notes: incident.incidentDescription,
-            severity: incident.severity,
-            images: incident.photoData.map { [$0.base64EncodedString()] } ?? []
-        )
-        return IncidentSummary(
-            summary: response.summary,
-            correctiveActionPlan: response.correctiveActions.joined(separator: "\n"),
-            followUpChecklist: response.recommendations
-        )
-    }
-
-    private func post(
-        module: String,
-        industry: String,
-        inspectionType: String,
-        notes: String,
-        severity: String,
-        images: [String]
-    ) async throws -> RemoteAIResponse {
-        guard let endpoint else { throw AIServiceError.invalidEndpoint }
-        var request = URLRequest(url: endpoint)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(RemoteAIRequest(
-            module: module,
-            industry: industry,
-            inspectionType: inspectionType,
-            notes: notes,
-            severity: severity,
-            images: images
-        ))
-
-        let (data, response) = try await session.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
-            throw AIServiceError.invalidResponse
-        }
-        return try JSONDecoder().decode(RemoteAIResponse.self, from: data)
-    }
-}
-
-private struct RemoteAIRequest: Encodable {
-    var module: String
-    var industry: String
-    var inspectionType: String
-    var notes: String
-    var severity: String
-    var images: [String]
-}
-
-private struct RemoteAIResponse: Decodable {
-    var summary: String
-    var recommendations: [String]
-    var riskLevel: String
-    var correctiveActions: [String]
 }
 
 private struct AIServiceKey: EnvironmentKey {

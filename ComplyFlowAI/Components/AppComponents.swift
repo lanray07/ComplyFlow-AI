@@ -85,6 +85,22 @@ struct ComplianceDisclaimerView: View {
     }
 }
 
+struct AIPrivacyNoticeView: View {
+    var body: some View {
+        CardSurface {
+            VStack(alignment: .leading, spacing: 10) {
+                Label("Local mock AI", systemImage: "lock.shield")
+                    .font(.headline)
+                    .foregroundStyle(.blue)
+                Text(ComplianceConstants.aiPrivacyText)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
 struct EmptyStateView: View {
     let title: String
     let message: String
@@ -297,4 +313,3 @@ extension View {
         background(Color(.systemGroupedBackground))
     }
 }
-

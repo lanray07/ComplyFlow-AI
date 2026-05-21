@@ -69,6 +69,8 @@ struct PaywallView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
+                AIPrivacyNoticeView()
+
                 if subscriptions.isLoading {
                     ProgressView("Loading StoreKit products")
                 }
