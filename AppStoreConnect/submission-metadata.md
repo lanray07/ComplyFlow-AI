@@ -100,7 +100,7 @@ Digital features and subscription access use Apple StoreKit 2. Product IDs are:
 - `com.complyflowai.pro.yearly`
 - `com.complyflowai.business.monthly`
 
-No API keys are stored in the app. The remote AI service contains only a backend endpoint placeholder.
+No API keys are stored in the app. The current App Store build uses local mock AI only and does not send user-created operational records to any external AI service.
 
 ## Age Rating Notes
 
@@ -115,4 +115,3 @@ Suggested answers:
 - Gambling: None
 - Unrestricted web access: No
 - User-generated content: Users create private business records only. There is no public posting, social feed, or user-to-user content sharing in this build.
-

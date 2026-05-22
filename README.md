@@ -9,7 +9,7 @@ Open `ComplyFlowAI.xcodeproj`, select the `ComplyFlowAI` scheme, choose an iOS 1
 ## Notes
 
 - Mock AI is enabled by default through `MockAIService`.
-- The current App Store build does not send user notes, photos, reports, inspections, incidents, audits, reminders, or business profile details to OpenAI, ChatGPT, or any other third-party AI service.
+- The current App Store build does not send user notes, photos, reports, inspections, incidents, audits, reminders, or business profile details to any external AI service.
 - StoreKit 2 product IDs are scaffolded in `SubscriptionManager`:
   - `com.complyflowai.pro.monthly`
   - `com.complyflowai.pro.yearly`

@@ -14,7 +14,7 @@ The current App Store build stores operational records locally on your device us
 
 ## AI Features
 
-The current App Store build uses local mock AI only. Inspection notes, photos, incident reports, SOP requests, audit details, business profile details, reminders, and reports are not sent to OpenAI, ChatGPT, or any other third-party AI service.
+The current App Store build uses local mock AI only. Inspection notes, photos, incident reports, SOP requests, audit details, business profile details, reminders, and reports are not sent to any external AI service.
 
 If a production AI backend is added in a future version, the app will be updated before release to clearly disclose what data is sent, who receives it, why it is used, how it is protected, and to request permission before any personal data is shared.
 
@@ -28,7 +28,7 @@ Subscriptions are processed by Apple using StoreKit and In-App Purchase. ComplyF
 
 ## Third-Party Sharing
 
-The current App Store build does not share user-created operational records, photos, notes, business profile information, inspection data, incident data, SOP data, audit data, or reminders with third-party AI providers.
+The current App Store build does not share user-created operational records, photos, notes, business profile information, inspection data, incident data, SOP data, audit data, or reminders with external AI providers.
 
 ## Disclaimers
 
